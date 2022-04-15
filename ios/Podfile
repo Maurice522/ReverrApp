@@ -12,8 +12,6 @@ target 'Reverr' do
     :hermes_enabled => false
   )
 
-  pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
-
   target 'ReverrTests' do
     inherit! :complete
     # Pods for testing
