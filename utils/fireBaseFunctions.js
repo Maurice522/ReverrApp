@@ -99,6 +99,77 @@ export const GetAllMentors = async setFn => {
 
 // };
 
+export const CreateMessagePath = async (currentcUser, sendTo) => {
+  firestore()
+    .collection('Messages')
+    .doc(currentcUser.email)
+    .collection(
+      currentcUser && currentcUser.userType == 'Mentor'
+        ? 'YourClients'
+        : 'YourMentors',
+    )
+    .doc(sendTo.email)
+    .set({messages: []})
+    .then(() => {
+      firestore()
+        .collection('Messages')
+        .doc(sendTo.email)
+        .collection(
+          sendTo && sendTo.userType == 'Mentor' ? 'YourClients' : 'YourMentors',
+        )
+        .doc(currentcUser.email)
+        .set({messages: []});
+    });
+};
+
+export const SendMessage = (currentcUser, sendTo, message) => {
+  firestore()
+    .collection('Messages')
+    .doc(currentcUser.email)
+    .collection(
+      currentcUser && currentcUser.userType == 'Mentor'
+        ? 'YourClients'
+        : 'YourMentors',
+    )
+    .doc(sendTo.email)
+    .update({
+      messages: firestore.FieldValue.arrayUnion({
+        msg: message,
+        createdAt: date + '-' + month + '-' + year,
+        sendBy: currentcUser.email,
+      }),
+    })
+    .then(() => {
+      firestore()
+        .collection('Messages')
+        .doc(sendTo.email)
+        .collection(
+          sendTo && sendTo.userType == 'Mentor' ? 'YourClients' : 'YourMentors',
+        )
+        .doc(currentcUser.email)
+        .update({
+          messages: firestore.FieldValue.arrayUnion({
+            msg: message,
+            createdAt: date + '-' + month + '-' + year,
+            sendBy: currentcUser.email,
+          }),
+        });
+    });
+};
+export const ReciveMessage = async (currentcUser, sendTo, setmsg) => {
+  const Allmsg = await firestore()
+    .collection('Messages')
+    .doc(currentcUser.email)
+    .collection(
+      currentcUser && currentcUser.userType == 'Mentor'
+        ? 'YourClients'
+        : 'YourMentors',
+    )
+    .doc(sendTo.email)
+    .get();
+  setmsg(Allmsg._data.messages);
+    }
+
 export const UpdateUserData = async (
   name,
   about,
