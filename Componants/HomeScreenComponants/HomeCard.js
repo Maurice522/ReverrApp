@@ -44,6 +44,7 @@ const HomeCard = () => {
   //     flatListRef.current?.scrollToIndex({index: 0});
   //   }
   // };
+
   // //auto scroll initiater after every 3 seconds
   // let value = setTimeout(nextPage, 3000);
 
@@ -164,10 +165,11 @@ const HomeCard = () => {
                   </TouchableOpacity>
                 ))
               ) : (
-                <CustomBtn
-                  style={styles.button}
-                  Title={item.id == 2 ? 'Get funding' : 'Enter room'}
-                />
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.btntxt}>
+                    {item.id == 2 ? 'Get funded' : 'Enter room'}
+                  </Text>
+                </TouchableOpacity>
               )}
             </View>
           </LinearGradient>
@@ -249,9 +251,18 @@ const styles = StyleSheet.create({
   },
   button: {
     width: Width / 1.2,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppColors.BtnClr,
     height: Height / 16,
     marginTop: Height / 20,
     marginStart: Width / 20,
+  },
+  btntxt: {
+    color: AppColors.ActiveColor,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 18,
   },
 });
 
