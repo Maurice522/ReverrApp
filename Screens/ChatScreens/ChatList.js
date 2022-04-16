@@ -11,13 +11,11 @@ import AppColors from '../../Constaint/AppColors';
 import SearchBar from '../../Componants/ChatScreenComponents/SearchBar';
 import Backbtn from '../../Componants/Backbtn';
 import {useNavigation} from '@react-navigation/native';
-import {AllMentors} from '../../dummy-data/AllMentors';
-import MentorsList from '../../Componants/ChatScreenComponents/MentorsList';
-import {GetUser, GetChatList} from '../../utils/fireBaseFunctions';
 import HeaderLayout from '../HomeScreens/HeaderLayout';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
 import {ChatContext, UserContext} from '../../App';
+import {CreateMessagePath} from '../../utils/fireBaseFunctions';
 
 const Width = Dimensions.get('screen').width;
 const Height = Dimensions.get('screen').height;
@@ -26,26 +24,68 @@ const ChatList = () => {
   const navigation = useNavigation();
   const {state, dispatch} = useContext(UserContext);
   const {chatstate, chatdispatch} = useContext(ChatContext);
-  console.log(chatstate);
+  // console.log(chatstate.email, 'chatlist');
 
   return (
     <HeaderLayout>
       <View style={styles.screen}>
-<<<<<<< HEAD
-        <Text style={styles.headerText}>Message</Text>
-        <Text style={[styles.headerText, {fontSize: 14}]}>Mentors</Text>
-
-=======
         {/* <Text style={styles.headerText}>Message</Text> */}
-        <Text style={[styles.headerText]}>{state&&state.userType=="Mentor"?"Learners":"Mentors"}</Text>
-        
->>>>>>> 0a4a28b81e36bab20bb5dd9f11688f920fe6e18e
+        <Text style={[styles.headerText]}>
+          {state && state.userType == 'Mentor' ? 'Learners' : 'Mentors'}
+        </Text>
+
         <View style={{flexDirection: 'row', marginTop: '3%'}}>
-          {chatstate !== undefined &&
-            chatstate.length > 0 ?(
+          {chatstate !== undefined && chatstate.length > 0 ? (
             chatstate.map(item => (
               <TouchableOpacity
+                key={item.email}
                 onPress={() => {
+            
+                  navigation.navigate('ViewIndividual', {
+                    userData: item,
+                  });
+                }}
+                activeOpacity={0.7}>
+                <LinearGradient
+                  colors={[AppColors.primarycolor, '#012437']}
+                  start={{x: 0.4, y: 1.3}}
+                  end={{x: 1, y: 0.5}}
+                  style={styles.card}>
+                  <Image style={styles.mentorDp} source={{uri: item.image}} />
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text style={styles.skill}>{item.industry}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'center',
+                width: '100%',
+                fontSize: 18,
+              }}>
+              You don't have any mentors curently 😐
+            </Text>
+          )}
+        </View>
+        <LinearGradient
+          style={styles.menu}
+          colors={[AppColors.primarycolor, '#012437']}
+          start={{x: -0.3, y: 1.8}}
+          end={{x: 1, y: 1.5}}>
+          <TouchableOpacity style={styles.chat}>
+            <Text style={styles.btntxt}>Chats</Text>
+          </TouchableOpacity>
+        </LinearGradient>
+        <View style={{flexDirection: 'row', marginTop: '3%'}}>
+          {chatstate !== undefined && chatstate.length > 0 ? (
+            chatstate.map(item => (
+              <TouchableOpacity
+                key={item.email}
+                onPress={() => {
+                  CreateMessagePath(state, item);
+                  alert('path created');
                   navigation.navigate('ChatBox', {
                     userData: item,
                   });
@@ -58,23 +98,22 @@ const ChatList = () => {
                   style={styles.card}>
                   <Image style={styles.mentorDp} source={{uri: item.image}} />
                   <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.skill}>{item.skills}</Text>
+                  <Text style={styles.skill}>{item.industry}</Text>
                 </LinearGradient>
               </TouchableOpacity>
-            ))):
-            (
-              <Text style={{color:"white", textAlign:"center", width:"100%", fontSize:18}}>You don't have any mentors cuurently 😐</Text>
-              )}
+            ))
+          ) : (
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'center',
+                width: '100%',
+                fontSize: 18,
+              }}>
+              You don't have any mentors curently 😐
+            </Text>
+          )}
         </View>
-        <LinearGradient
-          style={styles.menu}
-          colors={[AppColors.primarycolor, '#012437']}
-          start={{x: -0.3, y: 1.8}}
-          end={{x: 1, y: 1.5}}>
-          <TouchableOpacity style={styles.chat}>
-            <Text style={styles.btntxt}>Chats</Text>
-          </TouchableOpacity>
-        </LinearGradient>
       </View>
     </HeaderLayout>
   );

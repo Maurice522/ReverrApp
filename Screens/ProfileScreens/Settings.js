@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import AppColors from '../../Constaint/AppColors';
 import {AuthContext} from '../../Navigations/AuthProvider';
 import Backbtn from '../../Componants/Backbtn';
@@ -14,21 +14,18 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {ChangeDp} from '../../utils/fireBaseFunctions';
 import TitleCard from '../../Componants/ProfileScreenComponents/TitleCard';
 import {useNavigation} from '@react-navigation/native';
+import { UserContext } from '../../App';
 
 const Width = Dimensions.get('screen').width;
 const Height = Dimensions.get('screen').height;
 
 const Settings = props => {
   const {user, logout} = React.useContext(AuthContext);
-  const UserData = props.route.params.data;
   const [defaultdp, setdefaultdp] = useState(true);
   const navigation = useNavigation();
+  const {state,dispatch} = useContext(UserContext);
 
-  useEffect(() => {
-    if (UserData.image != '') {
-      setdefaultdp(false);
-    }
-  }, [defaultdp]);
+
 
   return (
     <View style={styles.screen}>
@@ -55,9 +52,7 @@ const Settings = props => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('EditProfile', {
-              mydata: UserData,
-            });
+            navigation.navigate('EditProfile');
           }}
           style={{height: '7%', marginTop: '7%'}}>
           <TitleCard firstText="Edit profile" />
@@ -80,17 +75,12 @@ const Settings = props => {
         </TouchableOpacity>
       </View>
       <View style={styles.dp}>
-        {defaultdp ? (
+        
           <Image
             style={{width: '100%', height: '100%'}}
-            source={require('../../assets/Images/jatindp.png')}
+            source={{uri: state&&state.image}}
           />
-        ) : (
-          <Image
-            style={{width: '100%', height: '100%'}}
-            source={{uri: UserData.image}}
-          />
-        )}
+  
       </View>
     </View>
   );

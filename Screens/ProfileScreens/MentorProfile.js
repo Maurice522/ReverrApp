@@ -7,21 +7,22 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import AppColors from '../../Constaint/AppColors';
 import Backbtn from '../../Componants/Backbtn';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import { UserContext } from '../../App';
 
 const Width = Dimensions.get('screen').width;
 const Height = Dimensions.get('screen').height;
 
 const MentorProfile = props => {
   const [defaultDp, setdefaultDp] = useState(true);
-  const UserData = props.route.params.Data;
+  const {state, dispatch} = useContext(UserContext);
   const navigation = useNavigation();
-  return (
+  return state&&(
     <ScrollView style={styles.screen}>
       <View style={styles.header}>
         <View style={{width: '40%'}}>
@@ -54,9 +55,7 @@ const MentorProfile = props => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Setting', {
-                data: UserData,
-              });
+              navigation.navigate('Setting');
             }}
             style={{
               alignItems: 'center',
@@ -71,9 +70,16 @@ const MentorProfile = props => {
             <Text style={styles.text}>Setting</Text>
           </TouchableOpacity>
         </View>
-        <View style={{height: '5%'}}>
-          <Text style={[styles.text, {alignSelf: 'center', fontSize: 17}]}>
-            {UserData && UserData.name}
+        <View style={{height: '8%'}}>
+          <Text style={[styles.text, 
+            {
+              width: '100%',
+              textAlign: 'center',
+              marginLeft: 10,
+              fontSize: 18,
+              textTransform: 'capitalize',
+              }]}>
+            {state.name}
           </Text>
         </View>
         <View
@@ -85,8 +91,7 @@ const MentorProfile = props => {
           }}>
           <Text style={[styles.text, {fontSize: 18}]}>About</Text>
           <Text style={styles.about}>
-            Whether you are looking to learn finance, get mentored, or join
-            investing communities, we provide a one-stop solution.
+            {state.about}
           </Text>
         </View>
         <View
@@ -107,7 +112,7 @@ const MentorProfile = props => {
               alignItems: 'center',
             }}>
             <Text style={[styles.text, {fontSize: 18, paddingRight: '5%'}]}>
-              finance
+              {state.industry}
             </Text>
             <Icon
               name="angle-right"
@@ -120,27 +125,26 @@ const MentorProfile = props => {
         <View style={styles.CompanyDetails}>
           <Text style={[styles.text, {fontSize: 18}]}>Experience</Text>
           <Text style={[styles.txt, {width: Width / 2}]}>
-            Product Designer -InnerBuddha Internship Dates EmployedJan 2021 –
-            Aug 2021 Duration-8 mos LocationBengaluru, Karnataka, India{' '}
+           {state.experience&&state.experience.length>0&&state.experience.map(ex=>ex)}
           </Text>
         </View>
         <View style={[styles.CompanyDetails, {height: Height / 9}]}>
           <Text style={[styles.text, {fontSize: 18}]}>Skills</Text>
           <Text style={[styles.txt, {width: Width / 2}]}>
-            Design Research Rapid Prototyping User Interface Design
+          {state.skills&&state.skills.length>0&&state.skills.map(sk=>sk)}
           </Text>
         </View>
         <View style={[styles.CompanyDetails, {height: Height / 9}]}>
           <Text style={[styles.text, {fontSize: 18}]}>Education</Text>
           <Text style={[styles.txt, {width: Width / 2}]}>
-            Design Research Rapid Prototyping User Interface Design
+          {state.education&&state.education.length>0&&state.education.map(ed=>ed)}
           </Text>
         </View>
       </View>
       <View style={styles.dp}>
         <Image
           style={{width: '100%', height: '100%'}}
-          source={{uri: UserData.image}}
+          source={{uri: state.image}}
         />
       </View>
     </ScrollView>

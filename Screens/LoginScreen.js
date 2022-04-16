@@ -11,82 +11,62 @@ import React, {useContext, useState} from 'react';
 import AppColors from '../Constaint/AppColors';
 import InputField from '../Componants/InputField';
 import CustomBtn from '../Componants/CustomBtn';
-<<<<<<< HEAD
+
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../Navigations/AuthProvider';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
-=======
-import { useNavigation } from '@react-navigation/native';
+
 import firestore from '@react-native-firebase/firestore';
-import { AuthContext } from '../Navigations/AuthProvider';
 import { UserContext, ChatContext } from '../App';
->>>>>>> 0a4a28b81e36bab20bb5dd9f11688f920fe6e18e
+
 
 const LoginScreen = () => {
+
   var [isSecure, setisSecure] = useState(true);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [emailerror, setemailerror] = useState(false);
   const [passerror, setpasserror] = useState(false);
-  const [password, setPassword] = useState('');
-  const {login} = useContext(AuthContext);
+  const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
   const navigation = useNavigation();
+  const {state,dispatch} = useContext(UserContext)
+  const {chatstate, chatdispatch} = useContext(ChatContext);
 
-<<<<<<< HEAD
+  async function loadChatUser (list){
+      console.log(list);
+      list.forEach(async(user)=>{
+      const User = await firestore().collection('Users').doc(user).get();
+      chatdispatch({type:"UPDATE", payload:User._data});
+      })  
+      
+  }
   const IsEmpty = () => {
-    if (email === '') {
-      setemailerror(true);
-    } else {
-      if (password === '') {
-        setpasserror(true);
+
+      if (email === "") {
+          setemailerror(true)
       } else {
-        login(email, password);
+          if (password === "") {
+              setpasserror(true);
+          } else {
+              login(email, password);
+              async function getUser (){
+                  const savedUser = await firestore()
+                    .collection('Users')
+                    .doc(email)
+                    .get();
+                  console.log(savedUser);
+                  savedUser._data.userType=="Mentor"?loadChatUser(savedUser._data.clients):loadChatUser(savedUser._data.mentors);
+                  dispatch({type:"USER",payload:savedUser._data})
+                }
+              
+                getUser();
+          }
       }
-=======
-    var [isSecure, setisSecure] = useState(true);
-    const [email, setEmail] = useState("");
-    const [emailerror, setemailerror] = useState(false);
-    const [passerror, setpasserror] = useState(false);
-    const [password, setPassword] = useState("");
-    const { login } = useContext(AuthContext);
-    const navigation = useNavigation();
-    const {state,dispatch} = useContext(UserContext)
-    const {chatstate, chatdispatch} = useContext(ChatContext);
-    async function loadChatUser (list){
-        console.log(list);
-        list.forEach(async(user)=>{
-        const User = await firestore().collection('Users').doc(user).get();
-        chatdispatch({type:"UPDATE", payload:User._data});
-        })  
-        
-    }
 
-    const IsEmpty = () => {
-
-        if (email === "") {
-            setemailerror(true)
-        } else {
-            if (password === "") {
-                setpasserror(true);
-            } else {
-                login(email, password);
-                async function getUser (){
-                    const savedUser = await firestore()
-                      .collection('Users')
-                      .doc(email)
-                      .get();
-                    console.log(savedUser);
-                    savedUser._data.userType=="Mentor"?loadChatUser(savedUser._data.clients):loadChatUser(savedUser._data.mentors);
-                    dispatch({type:"USER",payload:savedUser._data})
-                  }
-               
-                  getUser();
-            }
-        }
->>>>>>> 0a4a28b81e36bab20bb5dd9f11688f920fe6e18e
     }
-  };
+  
   return (
     <TouchableWithoutFeedback
       onPress={() => {
