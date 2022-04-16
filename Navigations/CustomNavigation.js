@@ -17,11 +17,14 @@ import FundingScreen from '../Screens/FundingScreens/FundingScreen';
 import Dashboard from '../Screens/HomeScreens/Dashboard';
 import ApplyFunding from '../Screens/FundingScreens/ApplyFunding';
 import Plans from '../Screens/MentorScreens/Plans';
-<<<<<<< HEAD
+import ViewIndividuaProfile from '../Screens/ProfileScreens/ViewProfile'
+
 import {VideoCall} from '../Screens/videocall/videoCall';
-=======
+
 import PlansDetails from '../Screens/MentorScreens/PlansDetails';
->>>>>>> 2ba72f44f90ff875f19ac7d06e45b4ab1f663c5e
+
+import Subscription from '../Screens/SubscriptionScreen/Subscription';
+
 const Stack = createNativeStackNavigator();
 
 export const HomeStack = () => {
@@ -37,6 +40,11 @@ export const HomeStack = () => {
         component={IndividuaProfile}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ViewIndividual"
+        component={ViewIndividuaProfile}
+        options={{headerShown: false}}
+      />  
       <Stack.Screen
         name="Mentor"
         component={MentorProfile}
@@ -82,6 +90,11 @@ export const HomeStack = () => {
         component={ArticleScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="Subscription"
+        component={Subscription}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -89,7 +102,7 @@ export const MentorStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Mentor"
+        name="FindMentor"
         component={MentorScreen}
         options={{headerShown: false}}
       />

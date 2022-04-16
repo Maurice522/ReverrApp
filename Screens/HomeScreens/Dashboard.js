@@ -23,23 +23,12 @@ const Dashboard = props => {
   const [article, setArticle] = useState(true);
   const {state, dispatch} = useContext(UserContext);
 
-<<<<<<< HEAD
-=======
-  // useEffect(() => {
-  //   GetUser(setAllData);
-  // }, []);
->>>>>>> 2ba72f44f90ff875f19ac7d06e45b4ab1f663c5e
-
   return (
     <HeaderLayout>
       <ScrollView>
         <View style={styles.wlcmConatiner}>
           <View>
-<<<<<<< HEAD
             <Text style={styles.welcmTxt}>Hi {state&&state.name}</Text>
-=======
-            <Text style={styles.welcmTxt}>Hii,{state && state.name}</Text>
->>>>>>> 2ba72f44f90ff875f19ac7d06e45b4ab1f663c5e
             <Text style={styles.subText}>
               Today is a good day to learn something new !
             </Text>

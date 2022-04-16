@@ -44,12 +44,9 @@ const HomeCard = () => {
   //     flatListRef.current?.scrollToIndex({index: 0});
   //   }
   // };
-<<<<<<< HEAD
-
-=======
   // //auto scroll initiater after every 3 seconds
   // let value = setTimeout(nextPage, 3000);
->>>>>>> 2ba72f44f90ff875f19ac7d06e45b4ab1f663c5e
+
 
   return (
     <View style={styles.CardContainer}>

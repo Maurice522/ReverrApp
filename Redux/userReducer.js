@@ -11,22 +11,18 @@ export const reducer =(state,action)=>{
   if(action.type==="UPDATE"){
     return {
       ...state,
-      followers:action.payload.followers,
-      following:action.payload.following
+     name:action.payload.name,
+     about:action.payload.about,
+     experience:action.payload.experience,
+     education:action.payload.education,
+     industry:action.payload.industry,
+     skills:action.payload.skills
     }
   }
   if(action.type==="UPDATEPHOTO"){
     return{
       ...state,
-      photo:action.payload
-    }
-  }
-  if(action.type==="UPDATEPROFILE"){
-    return{
-      ...state,
-      description:action.payload.description,
-      city:action.payload.city,
-      dob:action.payload.dob
+      image:action.payload
     }
   }
   if(action.type==="MEETING"){

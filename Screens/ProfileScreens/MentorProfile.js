@@ -3,147 +3,151 @@ import {
   Text,
   StyleSheet,
   Image,
-  Dimensions,
+  ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import AppColors from '../../Constaint/AppColors';
 import Backbtn from '../../Componants/Backbtn';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionic from 'react-native-vector-icons/Ionicons';
-import TitleCard from '../../Componants/ProfileScreenComponents/TitleCard';
-import AboutCard from '../../Componants/ProfileScreenComponents/AboutCard';
 import {useNavigation} from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
+import { UserContext } from '../../App';
 
 const Width = Dimensions.get('screen').width;
 const Height = Dimensions.get('screen').height;
 
 const MentorProfile = props => {
   const [defaultDp, setdefaultDp] = useState(true);
-  const UserData = props.route.params.Data;
+  const {state, dispatch} = useContext(UserContext);
   const navigation = useNavigation();
-
-  const finddp = () => {
-    if (UserData.image != '') {
-      setdefaultDp(false);
-    }
-  };
-
-  useEffect(() => {
-    finddp();
-  }, [defaultDp]);
-
-  return (
-    <View style={styles.screen}>
+  return state&&(
+    <ScrollView style={styles.screen}>
       <View style={styles.header}>
-        <Backbtn
-          IconSize={28}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
+        <View style={{width: '40%'}}>
+          <Backbtn
+            IconSize={30}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
         <Text
           style={{
             color: AppColors.FontsColor,
             fontFamily: 'Poppins-Regular',
-            marginStart: Width / 3.3,
+            marginStart: Width / 30,
             fontSize: 22,
           }}>
           Profile
         </Text>
       </View>
-      <LinearGradient
-        colors={[AppColors.primarycolor, '#012437']}
-        start={{x: 0.4, y: 1.3}}
-        end={{x: 1, y: 0.5}}
-        style={styles.mainContainer}>
+      <View style={styles.mainContainer}>
         <View style={styles.topIcons}>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <Icon name="crown" size={20} color={AppColors.FontsColor} />
-            <Text style={styles.text}>Membership</Text>
-          </View>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Setting', {
-                data: UserData,
-              });
+              navigation.navigate('Subscription');
+            }}
+            style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Icon name="star" size={25} color={AppColors.ActiveColor} />
+            <Text style={styles.text}>Membership</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Setting');
             }}
             style={{
               alignItems: 'center',
               justifyContent: 'center',
               marginStart: Width / 1.83,
             }}>
-            <Ionic name="settings" size={22} color={AppColors.FontsColor} />
+            <Ionic
+              name="settings-outline"
+              size={28}
+              color={AppColors.ActiveColor}
+            />
             <Text style={styles.text}>Setting</Text>
           </TouchableOpacity>
         </View>
-        <View style={{height: '5%'}}>
-          <TitleCard firstText={UserData.name.toUpperCase()} />
+        <View style={{height: '8%'}}>
+          <Text style={[styles.text, 
+            {
+              width: '100%',
+              textAlign: 'center',
+              marginLeft: 10,
+              fontSize: 18,
+              textTransform: 'capitalize',
+              }]}>
+            {state.name}
+          </Text>
         </View>
-        <View style={{height: 'auto', marginTop: '6%'}}>
-          <AboutCard
-            title="About"
-            description={
-              UserData.about === '' ? 'Enter About YourSelf' : UserData.about
-            }
-          />
+        <View
+          style={{
+            height: '17%',
+            marginTop: '2%',
+            borderBottomColor: AppColors.FontsColor,
+            borderBottomWidth: 1,
+          }}>
+          <Text style={[styles.text, {fontSize: 18}]}>About</Text>
+          <Text style={styles.about}>
+            {state.about}
+          </Text>
         </View>
-        <View style={{height: '5%', marginTop: '6%'}}>
-          <TitleCard firstText="Industry" secoundText="Finance" />
-        </View>
-        <View style={{height: 'auto', marginTop: '6%'}}>
-          <AboutCard
-            title="Experience"
-            description="Product Designer
-                        -InnerBuddha Internship
-                        Dates EmployedJan 2021  Aug 2021
-                        Duration-8 mos
-                        LocationBengaluru, Karnataka, India"
-          />
-        </View>
-        <View style={styles.CompanyDetails}>
-          <Text style={styles.title}>Skills</Text>
+        <View
+          style={{
+            height: '9%',
+            flexDirection: 'row',
+            marginTop: '2%',
+            alignItems: 'center',
+            paddingBottom: '4%',
+            justifyContent: 'space-between',
+            borderBottomColor: AppColors.FontsColor,
+            borderBottomWidth: 1,
+          }}>
+          <Text style={[styles.text, {fontSize: 18}]}>Industry</Text>
           <View
             style={{
               flexDirection: 'row',
-              marginTop: '0%',
-              justifyContent: 'space-around',
+              alignItems: 'center',
             }}>
-            <Text style={styles.txt}>Design Research</Text>
-            <Text style={styles.txt}>Rapid Prototyping</Text>
+            <Text style={[styles.text, {fontSize: 18, paddingRight: '5%'}]}>
+              {state.industry}
+            </Text>
+            <Icon
+              name="angle-right"
+              size={25}
+              color={AppColors.FontsColor}
+              style={{paddingRight: '2%', marginTop: '3%'}}
+            />
           </View>
-          <Text
-            style={[
-              styles.txt,
-              {marginStart: '9%', marginTop: '6%', marginBottom: '2%'},
-            ]}>
-            User InterFace Design
+        </View>
+        <View style={styles.CompanyDetails}>
+          <Text style={[styles.text, {fontSize: 18}]}>Experience</Text>
+          <Text style={[styles.txt, {width: Width / 2}]}>
+           {state.experience&&state.experience.length>0&&state.experience.map(ex=>ex)}
           </Text>
         </View>
-        <View style={{height: 'auto', marginTop: '6%'}}>
-          <AboutCard
-            title="Education"
-            description="Birla Institute of Technology and Science, Pilani
-                        Bachelor of Engineering - BE Computer Science
-                        "
-          />
+        <View style={[styles.CompanyDetails, {height: Height / 9}]}>
+          <Text style={[styles.text, {fontSize: 18}]}>Skills</Text>
+          <Text style={[styles.txt, {width: Width / 2}]}>
+          {state.skills&&state.skills.length>0&&state.skills.map(sk=>sk)}
+          </Text>
         </View>
-      </LinearGradient>
-      <View style={styles.dp}>
-        {defaultDp ? (
-          <Image
-            style={{width: '100%', height: '100%'}}
-            source={require('../../assets/Images/jatindp.png')}
-          />
-        ) : (
-          <Image
-            style={{width: '100%', height: '100%'}}
-            source={{uri: UserData.image}}
-          />
-        )}
+        <View style={[styles.CompanyDetails, {height: Height / 9}]}>
+          <Text style={[styles.text, {fontSize: 18}]}>Education</Text>
+          <Text style={[styles.txt, {width: Width / 2}]}>
+          {state.education&&state.education.length>0&&state.education.map(ed=>ed)}
+          </Text>
+        </View>
       </View>
-    </View>
+      <View style={styles.dp}>
+        <Image
+          style={{width: '100%', height: '100%'}}
+          source={{uri: state.image}}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -164,49 +168,52 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   mainContainer: {
-    backgroundColor: AppColors.BtnClr,
-    height: Height / 1.58,
+    height: Height / 1.45,
     marginVertical: Height / 9.8,
     paddingHorizontal: '2%',
     marginHorizontal: '2.5%',
     borderRadius: 10,
   },
   dp: {
-    height: Height / 8.2,
-    width: Width / 9.2,
+    height: Height / 7.5,
+    width: Width / 5.2,
     overflow: 'hidden',
     borderRadius: 200,
     marginStart: '35%',
     marginTop: '12%',
     position: 'absolute',
+    backgroundColor: AppColors.CardColor,
   },
   topIcons: {
     flexDirection: 'row',
-    paddingTop: '5%',
-    marginHorizontal: '5%',
+    paddingTop: '2%',
+    marginHorizontal: '1%',
   },
   text: {
     color: AppColors.FontsColor,
+    marginTop: Height / 82,
     fontFamily: 'Poppins-Regular',
-    fontSize: 10,
+    fontSize: 13,
   },
   CompanyDetails: {
     width: '100%',
-    height: 'auto',
-    backgroundColor: AppColors.CardColor,
-    marginTop: '3%',
-    borderRadius: 10,
+    height: Height / 7,
+    marginTop: '2%',
+    borderBottomColor: AppColors.FontsColor,
+    borderBottomWidth: 1,
   },
   title: {
     color: AppColors.FontsColor,
     fontFamily: 'Poppins-Regular',
-    marginStart: '3%',
     marginTop: '2%',
   },
   txt: {
     color: AppColors.infoFonts,
     fontFamily: 'Poppins-Regular',
     fontSize: 10,
+  },
+  about: {
+    color: AppColors.infoFonts,
   },
 });
 

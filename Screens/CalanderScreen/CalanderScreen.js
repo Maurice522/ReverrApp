@@ -15,33 +15,69 @@ import {ShowCalander} from '../../utils/calanderFunctionality';
 const Height = Dimensions.get('screen').height;
 const Width = Dimensions.get('screen').width;
 
-const CalanderScreen = props => {
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [week1, setWeek1] = useState([]);
-  const [week2, setWeek2] = useState([]);
-  const [week3, setWeek3] = useState([]);
-  const [week4, setWeek4] = useState([]);
-  const [week5, setWeek5] = useState([]);
-  const [dayname, setDayname] = useState([
-    ' S',
-    ' M',
-    ' T',
-    ' W',
-    'Th',
-    ' F',
-    'Sa',
-  ]);
-  const [dates, setDates] = useState([]);
-  useEffect(() => {
-    ShowCalander(setMonth, setYear, setDates);
-    generateDates();
-  }, [month]);
+function getCalender(month, year){
+  var montharr = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var fulldayarr =["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var dayarr = [" S"," M"," T"," W","Th"," F","Sa"];
+  var Tdays = new Date(year, month+1, 0).getDate(); //total days in the current month
+  var prevdays = new Date(year, month, 0).getDate(); //total days in the prev month
+  var dt = new Date(year, month, 1);
+  var startDay = dt.getDay(); //starting index of the month
+  var outputD =[];
+  var calender=[];
 
-  const generateDates = () => {
-    const date = dates.map(x => x);
-    //let temp = [...date[0]];
-  };
+  // calender indent gap
+  var p = prevdays-startDay+1;
+  for(var k=0; k<startDay; k++){ 
+      outputD.push(p);
+      p++;
+  }
+  
+  for (var i =1; i<Tdays+1; i++){
+     for (var j =outputD.length; j<7; j++){
+         if(i<Tdays+1){
+          i<10?outputD.push('  '+i):outputD.push(i);   
+          i++;
+         }
+     }
+     i--;
+  //    console.log(outputD.join(' ')); // printing row by row
+     calender.push(outputD);
+     outputD =[];
+  }
+  console.log(fulldayarr[startDay],"Total days: "+Tdays, montharr[month]);
+  return calender;
+}
+
+const CalanderScreen = props => {
+  var montharr = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var fulldayarr =["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var dayarr = [" S"," M"," T"," W","Th"," F","Sa"];
+  
+  var date = new Date();
+  const [month,setmonth] =  useState(date.getMonth());
+  var year = date.getFullYear();
+
+  const [calender, setCalender] = useState([]);
+
+  function Prev (){
+    setCalender(getCalender(month-1,year));
+    setmonth(month-1);
+  }
+
+  function Next (){
+    setCalender(getCalender(month+1,year));
+    setmonth(month+1);
+  }
+
+
+  useEffect(() => {
+    setCalender(getCalender(month,year));
+
+    // console.log(calender.map(week=>week))
+  }, []);
+
+
   return (
     <View
       style={{
@@ -55,20 +91,24 @@ const CalanderScreen = props => {
         <Icon name="times" size={25} color="black" />
       </TouchableOpacity>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={()=>Prev()}
+        >
           <Icon2 name="arrow-back-circle-outline" size={28} color="black" />
         </TouchableOpacity>
         <View style={{flexDirection: 'row'}}>
-          <Text style={styles.txt}>{month}</Text>
+          <Text style={styles.txt}>{montharr[month]}</Text>
           <Text style={styles.txt}>{year}</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity 
+          onPress={()=>Next()}
+        >
           <Icon2 name="arrow-forward-circle-outline" size={28} color="black" />
         </TouchableOpacity>
       </View>
       <View style={{width: '100%', marginStart: '9%', marginTop: '3%'}}>
         <FlatList
-          data={dayname}
+          data={dayarr}
           horizontal
           renderItem={({item}) => (
             <View key={item} style={styles.daysName}>
@@ -76,6 +116,61 @@ const CalanderScreen = props => {
             </View>
           )}
         />
+        <FlatList
+          data={calender[0]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={calender[1]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={calender[2]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={calender[3]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={calender[4]&&calender[4]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={calender[5]&&calender[5]}
+          horizontal
+          renderItem={({item}) => (
+            <View key={item} style={styles.daysName}>
+              <Text style={styles.text}>{item}</Text>
+            </View>
+          )}
+        />
+        
       </View>
       <View
         style={{
